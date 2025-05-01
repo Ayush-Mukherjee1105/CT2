@@ -8,7 +8,8 @@ const Home = () => {
       <div className="home-card">
         <h1>Welcome to <span className="highlight">Team APEX</span> 🎓</h1>
         <p className="home-text">
-          Welcome to the student team members management appication!! Add, view, and update members with ease.
+          Welcome to the student team members management appication!!
+          Add, view, and update members with ease.
         </p>
         <div className="home-actions">
           <Link to="/add">
