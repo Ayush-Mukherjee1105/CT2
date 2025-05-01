@@ -15,7 +15,7 @@ const Navbar = () => {
       <div className="navbar-left">
         <span className="logo-icon">🎓</span>
         <Link to="/" className="navbar-title">
-          Student Team Hub
+        Student Team Members Management Application
         </Link>
       </div>
       <div className="navbar-right">
