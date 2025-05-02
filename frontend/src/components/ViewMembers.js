@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../styles/styles.css";
+import { Link } from "react-router-dom";
+import "../styles/styles.css"; // Adjust the path as necessary
 
 const ViewMembers = () => {
   const [members, setMembers] = useState([]);
-  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetch("http://localhost:5000/api/members")
@@ -13,44 +13,52 @@ const ViewMembers = () => {
       .catch((err) => console.error("Error fetching members:", err));
   }, []);
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this member?");
-    if (!confirmDelete) return;
-
-    try {
-      const res = await fetch(`http://localhost:5000/api/members/${id}`, {
-        method: "DELETE",
-      });
-      if (res.ok) {
-        setMembers((prev) => prev.filter((m) => m._id !== id));
-      } else {
-        alert("Failed to delete.");
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const filteredMembers = members.filter((member) =>
+    [member.name, member.email, member.rollNumber]
+      .some((field) => field?.toLowerCase().includes(search.toLowerCase()))
+  );
 
   return (
     <div className="view-container">
       <h2 className="section-title">👥 Team Members</h2>
+
+      <input
+        className="search-input"
+        type="text"
+        placeholder="🔍 Search by name, email, or roll number"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
       <div className="member-grid">
-        {members.map((member) => (
-          <div className="member-card" key={member._id}>
-            <img
-              src={`http://localhost:5000/uploads/${member.profileImage}`}
-              alt={member.name}
-              className="member-img"
-            />
-            <h3>{member.name}</h3>
-            <p className="role">{member.role}</p>
-            <p className="meta">{member.degree}, {member.year}</p>
-            <div className="card-buttons">
-              <button onClick={() => navigate(`/edit/${member._id}`)} className="edit-btn">✏ Edit</button>
-              <button onClick={() => handleDelete(member._id)} className="delete-btn">🗑 Delete</button>
+        {filteredMembers.length ? (
+          filteredMembers.map((member) => (
+            <div key={member._id} className="member-card">
+              <img
+                className="member-img"
+                src={`http://localhost:5000/uploads/${member.profileImage}`}
+                alt={member.name}
+              />
+              <h3>
+                <Link to={`/member/${member._id}`} className="profile-link">
+                  {member.name}
+                </Link>
+              </h3>
+              <p className="role">{member.role}</p>
+              <p className="meta">{member.email}</p>
+              <div className="card-buttons">
+                <Link to={`/edit/${member._id}`}>
+                  <button className="edit-btn">✏ Edit</button>
+                </Link>
+                <Link to={`/member/${member._id}`}>
+                  <button className="delete-btn">👁 View</button>
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>No matching members found.</p>
+        )}
       </div>
     </div>
   );

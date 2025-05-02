@@ -302,4 +302,21 @@
     font-weight: bold;
     cursor: pointer;
   }
+  .search-input {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 30px;
+    display: block;
+    padding: 10px 16px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #f7f7f7;
+  }
+  
+  body.dark .search-input {
+    background: #1f1f2e;
+    color: white;
+    border-color: #555;
+  }
   
