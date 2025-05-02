@@ -2,70 +2,71 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../styles/styles.css';
 
-const MemberDetails = () => {
+const EditMember = () => {
   const { id } = useParams();
-  const [member, setMember] = useState(null);
   const navigate = useNavigate();
+  const [member, setMember] = useState(null);
 
   useEffect(() => {
-    console.log('Details ID:', id); // ✅ Debug
     fetch(`http://localhost:5000/api/members/${id}`)
       .then(res => res.json())
-      .then(data => {
-        console.log('Fetched member:', data); // ✅ Debug
-        setMember(data);
-      })
-      .catch(err => console.error('Details fetch error:', err));
+      .then(data => setMember(data))
+      .catch(err => console.error('Fetch error:', err));
   }, [id]);
 
-  const handleDelete = async () => {
-    if (!window.confirm('Delete member?')) return;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setMember(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const res = await fetch(`http://localhost:5000/api/members/${id}`, {
-        method: 'DELETE',
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(member),
       });
+
       if (res.ok) {
-        alert('Deleted');
+        alert('Member updated successfully!');
         navigate('/view');
       } else {
-        alert('Failed');
+        const err = await res.json();
+        alert('Update failed: ' + (err.message || 'unknown error'));
       }
     } catch (err) {
       console.error(err);
     }
   };
 
-  if (!member) return <p style={{ textAlign: 'center' }}>Loading details...</p>;
+  if (!member) return <p style={{ textAlign: 'center' }}>Loading...</p>;
 
   return (
-    <div className="member-card">
-      <h2 className="member-heading">👤 Member Profile</h2>
-      <div className="image-preview">
-        <img
-          src={`http://localhost:5000/uploads/${member.profileImage || ''}`}
-          alt={member.name}
-          className="preview-image"
-        />
-      </div>
-      <div className="member-detail">
-        <p><strong>Name:</strong> {member.name}</p>
-        <p><strong>Email:</strong> {member.email}</p>
-        <p><strong>Roll Number:</strong> {member.rollNumber}</p>
-        <p><strong>Year:</strong> {member.year}</p>
-        <p><strong>Degree:</strong> {member.degree}</p>
-        <p><strong>Role:</strong> {member.role}</p>
-        <p><strong>Project:</strong> {member.project}</p>
-        <p><strong>Hobby:</strong> {member.hobby}</p>
-        <p><strong>Certification:</strong> {member.certification}</p>
-        <p><strong>Internship:</strong> {member.internship}</p>
-        <p><strong>Aim:</strong> {member.aim}</p>
-      </div>
-      <div className="card-buttons">
-        <button onClick={() => navigate(`/members/edit/${id}`)} className="edit-btn">✏ Edit</button>
-        <button onClick={handleDelete} className="delete-btn">🗑 Delete</button>
-      </div>
+    <div className="form-container">
+      <h2 className="form-title">✏ Edit Member</h2>
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="form-grid">
+          {[
+            'name', 'email', 'rollNumber', 'year', 'degree', 'role',
+            'project', 'hobby', 'certification', 'internship', 'aim'
+          ].map((field) => (
+            <input
+              key={field}
+              name={field}
+              value={member[field] || ''}
+              onChange={handleChange}
+              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+              required
+            />
+          ))}
+        </div>
+        <button className="submit-btn" type="submit">💾 Save</button>
+      </form>
     </div>
   );
 };
 
-export default MemberDetails;
+export default EditMember;
