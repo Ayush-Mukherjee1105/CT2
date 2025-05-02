@@ -319,4 +319,40 @@
     color: white;
     border-color: #555;
   }
+
+  .member-detail {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .preview-image {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ccc;
+    margin-bottom: 1rem;
+  }
+
+  .member-card {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 15px;
+    background-color: var(--card-color);
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  
+  .member-heading {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  
+  
+  
   

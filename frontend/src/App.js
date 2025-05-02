@@ -5,6 +5,7 @@ import AddMember from "./components/AddMember";
 import ViewMembers from "./components/ViewMembers";
 import EditMember from "./components/EditMember"; // Make sure this matches the actual filename
 import Navbar from "./components/Navbar"; 
+import MemberDetails from "./components/MemberDetails";
 import "./styles/styles.css"; 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/add" element={<AddMember />} />
           <Route path="/view" element={<ViewMembers />} />
           <Route path="/edit/:id" element={<EditMember />} /> {/* ✅ Add this */}
+          <Route path="/member/:id" element={<MemberDetails />} /> {/* ✅ Add this */}
         </Routes>
       </div>
     </Router>

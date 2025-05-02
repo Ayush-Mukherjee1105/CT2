@@ -2,21 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../styles/styles.css';
 
-const MemberDetails = ({ isDarkMode, toggleDarkMode }) => {
+const MemberDetails = ({ isDarkMode }) => {
   const { id } = useParams();
   const [member, setMember] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:5000/api/members/${id}`)
-      .then(res => res.json())
-      .then(data => setMember(data))
-      .catch(err => console.error(err));
+      .then((res) => res.json())
+      .then((data) => setMember(data))
+      .catch((err) => console.error('Fetch error:', err));
   }, [id]);
 
   const handleDelete = async () => {
-    const confirm = window.confirm('Are you sure you want to delete this member?');
-    if (!confirm) return;
+    if (!window.confirm('Are you sure you want to delete this member?')) return;
 
     try {
       const res = await fetch(`http://localhost:5000/api/members/${id}`, {
@@ -27,27 +26,34 @@ const MemberDetails = ({ isDarkMode, toggleDarkMode }) => {
         alert('Member deleted.');
         navigate('/view');
       } else {
-        alert('Failed to delete.');
+        alert('Failed to delete member.');
       }
     } catch (err) {
       console.error(err);
     }
   };
 
-  if (!member) return <p className="loading-text">Loading member details...</p>;
+  if (!member) {
+    return (
+      <div className={`form-page ${isDarkMode ? 'dark' : ''}`}>
+        <div className="form-card"><h2>Loading Member Details...</h2></div>
+      </div>
+    );
+  }
 
   return (
     <div className={`form-page ${isDarkMode ? 'dark' : ''}`}>
-      <Navbar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
+      <div className="member-card">
+        <h2 className="member-heading">👤 Member Profile</h2>
 
-      <div className="form-card">
-        <h2>👤 Member Profile</h2>
         <div className="preview-container">
-          <img
-            src={`http://localhost:5000/uploads/${member.profileImage}`}
-            alt={member.name}
-            className="preview-image"
-          />
+          {member.profileImage && (
+            <img
+              src={`http://localhost:5000/uploads/${member.profileImage}`}
+              alt={member.name}
+              className="preview-image"
+            />
+          )}
         </div>
 
         <div className="member-detail">
@@ -65,7 +71,7 @@ const MemberDetails = ({ isDarkMode, toggleDarkMode }) => {
         </div>
 
         <div className="form-actions">
-          <button onClick={() => navigate(`/members/edit/${id}`)} className="submit-btn">✏ Edit</button>
+          <button onClick={() => navigate(`/edit/${id}`)} className="submit-btn">✏ Edit</button>
           <button onClick={handleDelete} className="delete-btn">🗑 Delete</button>
         </div>
       </div>
