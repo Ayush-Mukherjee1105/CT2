@@ -2,67 +2,70 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../styles/styles.css';
 
-const EditMember = () => {
+const MemberDetails = () => {
   const { id } = useParams();
   const [member, setMember] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('Details ID:', id); // ✅ Debug
     fetch(`http://localhost:5000/api/members/${id}`)
       .then(res => res.json())
-      .then(data => setMember(data))
-      .catch(err => console.error(err));
+      .then(data => {
+        console.log('Fetched member:', data); // ✅ Debug
+        setMember(data);
+      })
+      .catch(err => console.error('Details fetch error:', err));
   }, [id]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setMember({ ...member, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleDelete = async () => {
+    if (!window.confirm('Delete member?')) return;
     try {
       const res = await fetch(`http://localhost:5000/api/members/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(member)
+        method: 'DELETE',
       });
-
       if (res.ok) {
-        alert('Member updated!');
+        alert('Deleted');
         navigate('/view');
       } else {
-        alert('Update failed');
+        alert('Failed');
       }
     } catch (err) {
       console.error(err);
     }
   };
 
-  if (!member) return <p className="loading-text">Loading...</p>;
+  if (!member) return <p style={{ textAlign: 'center' }}>Loading details...</p>;
 
   return (
-    <div className="form-container">
-      <h2 className="form-title">✏ Edit Member</h2>
-      <form className="form" onSubmit={handleSubmit}>
-        <div className="form-grid">
-          <input name="name" value={member.name} onChange={handleChange} placeholder="Full Name" />
-          <input name="email" value={member.email} onChange={handleChange} placeholder="Email" />
-          <input name="rollNumber" value={member.rollNumber} onChange={handleChange} placeholder="Roll Number" />
-          <input name="year" value={member.year} onChange={handleChange} placeholder="Year" />
-          <input name="degree" value={member.degree} onChange={handleChange} placeholder="Degree" />
-          <input name="role" value={member.role} onChange={handleChange} placeholder="Role" />
-          <input name="project" value={member.project} onChange={handleChange} placeholder="Project" />
-          <input name="hobby" value={member.hobby} onChange={handleChange} placeholder="Hobby" />
-          <input name="certification" value={member.certification} onChange={handleChange} placeholder="Certifications" />
-          <input name="internship" value={member.internship} onChange={handleChange} placeholder="Internship" />
-          <input name="aim" value={member.aim} onChange={handleChange} placeholder="Aim" />
-        </div>
-        <button className="submit-btn" type="submit">✅ Save Changes</button>
-      </form>
+    <div className="member-card">
+      <h2 className="member-heading">👤 Member Profile</h2>
+      <div className="image-preview">
+        <img
+          src={`http://localhost:5000/uploads/${member.profileImage || ''}`}
+          alt={member.name}
+          className="preview-image"
+        />
+      </div>
+      <div className="member-detail">
+        <p><strong>Name:</strong> {member.name}</p>
+        <p><strong>Email:</strong> {member.email}</p>
+        <p><strong>Roll Number:</strong> {member.rollNumber}</p>
+        <p><strong>Year:</strong> {member.year}</p>
+        <p><strong>Degree:</strong> {member.degree}</p>
+        <p><strong>Role:</strong> {member.role}</p>
+        <p><strong>Project:</strong> {member.project}</p>
+        <p><strong>Hobby:</strong> {member.hobby}</p>
+        <p><strong>Certification:</strong> {member.certification}</p>
+        <p><strong>Internship:</strong> {member.internship}</p>
+        <p><strong>Aim:</strong> {member.aim}</p>
+      </div>
+      <div className="card-buttons">
+        <button onClick={() => navigate(`/members/edit/${id}`)} className="edit-btn">✏ Edit</button>
+        <button onClick={handleDelete} className="delete-btn">🗑 Delete</button>
+      </div>
     </div>
   );
 };
 
-export default EditMember;
+export default MemberDetails;
