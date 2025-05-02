@@ -45,7 +45,9 @@ Student Team Hub allows users to:
     ```bash
     mongod
 
-**API ENDPOINTS**
+---
+
+## API ENDPOINTS
 | Method | Endpoint           | Description                          |
 | ------ | ------------------ | ------------------------------------ |
 | GET    | `/api/members`     | Get all team members                 |
@@ -54,18 +56,23 @@ Student Team Hub allows users to:
 | PUT    | `/api/members/:id` | Update member details                |
 | DELETE | `/api/members/:id` | Delete a member                      |
 
-**How To Run the App**
-    Run Backend
+---
+
+## How To Run the App
+
+1. **Run Backend**
     ```bash
     cd backend
     npm start
 
-    Run frontend
+2. **Run frontend**
     ```bash
     cd frontend
     npm start
 
-**Screenshots**
+---
+
+## Screenshots
 Home Page:
 ![alt text](image.png)
 
