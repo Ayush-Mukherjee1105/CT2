@@ -1,6 +1,6 @@
 # 🧠 Student Team Hub
 
-A full-stack MERN application to manage and showcase student team members with profile pictures, editable details, and search functionality. Built using basic React, Node.js, Express, and MongoDB (no third-party styling or libraries beyond essentials).
+A full-stack MERN application to manage and showcase student team members with profile pictures, editable details, and search functionality. Built using basic React, Node.js, Express,and MongoDB (no third-party styling or libraries beyond essentials).
 
 ---
 
